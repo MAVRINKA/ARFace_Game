@@ -13,14 +13,20 @@ public class QuizGame : MonoBehaviour
 
     public TextMeshProUGUI qText;
     public GameObject headPanel;
+    public GameObject endGamePanel;
     public Button[] answerBttns = new Button[4];
     //public Sprite[] TFIcons = new Sprite[2];
     //public Image TFIcon;
     public TextMeshProUGUI TFText;
 
+    private int score = 0;
+    private int numberQuestion;
+    public TextMeshProUGUI scoreTxt;
+
+
     List<object> qList;
     QuestionList crntQ;
-    GameObject faceID;
+
     int randQ;
     bool defaultColor = false, trueColor = false, falseColor = false;
 
@@ -28,6 +34,8 @@ public class QuizGame : MonoBehaviour
     {
         arFaceManager = GameObject.Find("AR Session Origin").gameObject.GetComponent<ARFaceManager>();
         arFaceManager.facePrefab = null;
+
+        numberQuestion = questions.Length;
     }
 
     void Update()
@@ -35,6 +43,8 @@ public class QuizGame : MonoBehaviour
         if (defaultColor) headPanel.GetComponent<Image>().color = Color.Lerp(headPanel.GetComponent<Image>().color, new Color(231 / 255.0F, 78 / 255.0F, 62 / 255.0F), 8 * Time.deltaTime);
         if (trueColor) headPanel.GetComponent<Image>().color = Color.Lerp(headPanel.GetComponent<Image>().color, new Color(104 / 255.0F, 184 / 255.0F, 89 / 255.0F), 8 * Time.deltaTime);
         if (falseColor) headPanel.GetComponent<Image>().color = Color.Lerp(headPanel.GetComponent<Image>().color, new Color(192 / 255.0F, 57 / 255.0F, 43 / 255.0F), 8 * Time.deltaTime);
+
+        IdentityTxtScore();
     }
 
     public void OnClickPlay()
@@ -52,14 +62,6 @@ public class QuizGame : MonoBehaviour
             crntQ = qList[randQ] as QuestionList;
             qText.text = crntQ.question;
 
-            arFaceManager.enabled = false;
-            yield return new WaitForSeconds(1);
-            arFaceManager.enabled = true;
-            GameObject faceID = crntQ.faceARVariable;
-            arFaceManager.facePrefab = faceID;
-
-            TFText.enabled = false;
-            //qText.gameObject.GetComponent<Animator>().SetTrigger("In");
             List<string> answers = new List<string>(crntQ.answers);
 
             for (int i = 0; i < crntQ.answers.Length; i++)
@@ -68,11 +70,22 @@ public class QuizGame : MonoBehaviour
                 answersText[i].text = answers[rand];
                 answers.RemoveAt(rand);
             }
+
+            arFaceManager.enabled = false;
+            yield return new WaitForSeconds(1);
+            arFaceManager.enabled = true;
+            GameObject faceID = crntQ.faceARVariable;
+            arFaceManager.facePrefab = faceID;
+
+            TFText.enabled = false;
+            //qText.gameObject.GetComponent<Animator>().SetTrigger("In");
+            
             //StartCoroutine(animBttns());
         }
         else
         {
             print("Вы прошли игру");
+            endGamePanel.SetActive(true);
         }
     }
 
@@ -91,6 +104,7 @@ public class QuizGame : MonoBehaviour
             //TFIcon.sprite = TFIcons[0];
             TFText.enabled = true;
             TFText.text = "Правильный ответ";
+            score += 1;
             yield return new WaitForSeconds(2);
             //TFIcon.gameObject.GetComponent<Animator>().SetTrigger("Out");
             qList.RemoveAt(randQ);
@@ -121,6 +135,11 @@ public class QuizGame : MonoBehaviour
     {
         if (answersText[index].text.ToString() == crntQ.answers[0]) StartCoroutine(TrueOrFalse(true));
         else StartCoroutine(TrueOrFalse(false));
+    }
+
+    public void IdentityTxtScore()
+    {
+        scoreTxt.text = score.ToString() + "/" + numberQuestion;
     }
 }
 [System.Serializable]

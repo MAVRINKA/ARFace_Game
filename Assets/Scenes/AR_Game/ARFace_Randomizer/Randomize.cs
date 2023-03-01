@@ -37,7 +37,7 @@ public class Randomize : MonoBehaviour
         {
             btnGo.interactable = false;
 
-            randomDiceSide = Random.Range(0, diceSides.Length - 1);
+            randomDiceSide = Random.Range(0, diceSides.Length);
 
             sp.sprite = diceSides[randomDiceSide];
 
