@@ -21,6 +21,8 @@ public class QuizGame : MonoBehaviour
 
     private int score = 0;
     private int numberQuestion;
+
+    public TextMeshProUGUI infoTxt;
     public TextMeshProUGUI scoreTxt;
 
 
@@ -85,8 +87,19 @@ public class QuizGame : MonoBehaviour
         else
         {
             print("Вы прошли игру");
-            endGamePanel.SetActive(true);
+            StartCoroutine(CompleteGame());
         }
+    }
+
+    IEnumerator CompleteGame()
+    {
+        if(score <= numberQuestion / 2)
+            infoTxt.text = "Стоит немного потренироваться!";
+        else
+            infoTxt.text = infoTxt.text;
+
+        yield return new WaitForEndOfFrame();
+        endGamePanel.SetActive(true);
     }
 
     IEnumerator TrueOrFalse(bool check)
