@@ -15,15 +15,20 @@ public class QuizGame : MonoBehaviour
     public GameObject headPanel;
     public GameObject endGamePanel;
     public Button[] answerBttns = new Button[4];
-    //public Sprite[] TFIcons = new Sprite[2];
-    //public Image TFIcon;
+
     public TextMeshProUGUI TFText;
+    public GameObject checkQuestionImg;
 
     private int score = 0;
     private int numberQuestion;
 
     public TextMeshProUGUI infoTxt;
     public TextMeshProUGUI scoreTxt;
+
+    private AudioSource _audio;
+    [Header("Audio")]
+    public AudioClip win;
+    public AudioClip gameover;
 
 
     List<object> qList;
@@ -34,6 +39,7 @@ public class QuizGame : MonoBehaviour
 
     private void Start()
     {
+        _audio = GetComponent<AudioSource>();
         arFaceManager = GameObject.Find("AR Session Origin").gameObject.GetComponent<ARFaceManager>();
         arFaceManager.facePrefab = null;
 
@@ -78,10 +84,9 @@ public class QuizGame : MonoBehaviour
             arFaceManager.enabled = true;
             GameObject faceID = crntQ.faceARVariable;
             arFaceManager.facePrefab = faceID;
-
-            TFText.enabled = false;
+            //TFText.enabled = false;
+            //checkQuestionImg.SetActive(false);
             //qText.gameObject.GetComponent<Animator>().SetTrigger("In");
-            
             //StartCoroutine(animBttns());
         }
         else
@@ -114,11 +119,10 @@ public class QuizGame : MonoBehaviour
         if (check)
         {
             trueColor = true;
-            //TFIcon.sprite = TFIcons[0];
-            TFText.enabled = true;
-            TFText.text = "Правильный ответ";
+            QuestionComplete();
             score += 1;
-            yield return new WaitForSeconds(2);
+            _audio.PlayOneShot(win);
+            yield return new WaitForSeconds(1);
             //TFIcon.gameObject.GetComponent<Animator>().SetTrigger("Out");
             qList.RemoveAt(randQ);
             StartCoroutine(QuestionGenerate());
@@ -130,10 +134,9 @@ public class QuizGame : MonoBehaviour
         else
         {
             falseColor = true;
-            //TFIcon.sprite = TFIcons[1];
-            TFText.text = "Неправильный ответ";
-            TFText.enabled = true;
-            yield return new WaitForSeconds(2);
+            QuestionLoser();
+            _audio.PlayOneShot(gameover);
+            yield return new WaitForSeconds(1);
             qList.RemoveAt(randQ);
             StartCoroutine(QuestionGenerate());
             for (int i = 0; i < answerBttns.Length; i++) answerBttns[i].interactable = true;
@@ -153,6 +156,22 @@ public class QuizGame : MonoBehaviour
     public void IdentityTxtScore()
     {
         scoreTxt.text = score.ToString() + "/" + numberQuestion;
+    }
+
+    public void QuestionComplete()
+    {
+        checkQuestionImg.GetComponent<Animator>().SetTrigger("CheckQuestinos_trigger");
+        TFText.enabled = true;
+        TFText.color = Color.green;
+        TFText.text = "Верно!";
+    }
+
+    public void QuestionLoser()
+    {
+        checkQuestionImg.GetComponent<Animator>().SetTrigger("CheckQuestinos_trigger");
+        TFText.text = "Неверно!";
+        TFText.color = Color.red;
+        TFText.enabled = true;
     }
 }
 [System.Serializable]
