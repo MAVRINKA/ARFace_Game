@@ -13,13 +13,12 @@ public class Randomize : MonoBehaviour
     public Text nameFac;
 
     public AudioSource audioS;
-    //public AudioClip endRandom;
 
     public Button btnGo;
 
     private void Start()
     {
-        diceSides = Resources.LoadAll<Sprite>("Image_Randomize");
+        diceSides = Resources.LoadAll<Sprite>("Image_Randomize_HP");
     }
 
     public void RandomGo()
@@ -40,6 +39,7 @@ public class Randomize : MonoBehaviour
             randomDiceSide = Random.Range(0, diceSides.Length);
 
             sp.sprite = diceSides[randomDiceSide];
+            img.sprite = sp.sprite;
 
             nameFac.enabled = false;
 

@@ -6,13 +6,13 @@ public class Obstacle : MonoBehaviour
 
     private void Start()
     {
-        leftEdge = -15f;
+        leftEdge = 15f;
     }
     private void Update()
     {
-        transform.position += Vector3.left * GameManager.Instance.gameSpeed * Time.deltaTime;
+        transform.position += GameManager.Instance.gameSpeed * Time.deltaTime * Vector3.right;
 
-        if(transform.position.x < leftEdge)
+        if(transform.position.x > leftEdge)
         {
             Destroy(gameObject);
         }
