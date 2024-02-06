@@ -44,6 +44,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/AR_Game/ARFace_Randomizer/HPRandom.unity
     guid: dc7a15b7c41c89844b97dcda4efed55d
+  - enabled: 1
+    path: Assets/Scenes/AR_Game/ARFace_Quiz/CULTURE/ARFace_QuizCulture.unity
+    guid: 124ddee8ceadca946ad991824c354aa3
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 1eed57543e4f32c43a561cb0b3e62238, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 2d7fa9bfac930fd41a783791ef42ca71, type: 2}
